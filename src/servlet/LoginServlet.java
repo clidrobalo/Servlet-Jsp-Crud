@@ -9,8 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import beans.beanCursoJsp;
+import beans.UsuarioBean;
 import dao.DaoLogin;
+import dao.DaoUsuario;
 
 /**
  * Servlet implementation class LoginServlet
@@ -46,6 +47,12 @@ public class LoginServlet extends HttpServlet {
 			request.setAttribute("existeCridencias", existeCridencias);
 			try {
 				if(daoLogin.validarLogin(user, senha)) {
+					UsuarioBean usuario = daoLogin.getUser(user);
+					if(usuario.getTipoAcesso().equals("Admin")) {
+						request.setAttribute("tipoAcesso", "Admin");
+					} else {
+						request.setAttribute("tipoAcesso", "Convidado");
+					}
 					RequestDispatcher dispacher = request.getRequestDispatcher("acessoLiberado.jsp");
 					dispacher.forward(request, response);
 				} else {

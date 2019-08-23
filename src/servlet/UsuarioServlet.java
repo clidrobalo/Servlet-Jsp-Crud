@@ -29,7 +29,7 @@ import org.apache.tomcat.util.codec.binary.Base64;
 
 import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BEncoderStream;
 
-import beans.beanCursoJsp;
+import beans.UsuarioBean;
 import dao.DaoUsuario;
 
 /**
@@ -37,13 +37,13 @@ import dao.DaoUsuario;
  */
 @WebServlet("/salvarUsuario")
 @MultipartConfig
-public class CadastroServlet extends HttpServlet {
+public class UsuarioServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	
 	DaoUsuario userDao = new DaoUsuario();
 	
-    public CadastroServlet() {
+    public UsuarioServlet() {
         super();
     }
 
@@ -51,26 +51,29 @@ public class CadastroServlet extends HttpServlet {
 		
 		String acao = request.getParameter("acao");
 		String  idUser = request.getParameter("id");
+		String tipoAcesso = request.getParameter("tipoAcesso");
 		
 		System.out.println(acao);
+		
+		request.setAttribute("tipoAcesso", tipoAcesso);
 		
 		if(acao.equals("delete")) {
 			userDao.delete(Long.parseLong(idUser));
 			RequestDispatcher view = request.getRequestDispatcher("cadastroUsuario.jsp");
-			request.setAttribute("usuarios", userDao.getUsers());
+			request.setAttribute("usuarios", userDao.getUsers(tipoAcesso));
 			view.forward(request, response);
 		} else if(acao.equals("editar")) {
-			beanCursoJsp bean = userDao.consultar(Long.parseLong(idUser));
+			UsuarioBean bean = userDao.consultar(Long.parseLong(idUser));
 			RequestDispatcher view = request.getRequestDispatcher("cadastroUsuario.jsp");
-			request.setAttribute("usuarios", userDao.getUsers());
+			request.setAttribute("usuarios", userDao.getUsers(tipoAcesso));
 			request.setAttribute("user", bean);
 			view.forward(request, response);
 		} else if(acao.equals("listarTodos")) {
 			RequestDispatcher view = request.getRequestDispatcher("/cadastroUsuario.jsp");
-			request.setAttribute("usuarios", userDao.getUsers());
+			request.setAttribute("usuarios", userDao.getUsers(tipoAcesso));
 			view.forward(request, response);
 		} else if(acao.equals("download")) {
-			beanCursoJsp user = userDao.consultar(Long.parseLong(idUser));
+			UsuarioBean user = userDao.consultar(Long.parseLong(idUser));
 			//teste se user existe
 			if(user != null) {
 				String contentType = "";
@@ -120,20 +123,23 @@ public class CadastroServlet extends HttpServlet {
 		String uf = request.getParameter("uf");
 		String ibge = request.getParameter("ibge");
 		String senha = request.getParameter("senha");
+		String tipoUtilizador = request.getParameter("tipoUtilizador");
+		String tipoAcesso = request.getParameter("tipoAcesso");
 		
 		int userExiste = 0;
 		
-		beanCursoJsp bean = new beanCursoJsp();
-		bean.setUser(login);
-		bean.setNome(nome);
-		bean.setTelefone(telefone);
-		bean.setCep(cep);
-		bean.setRua(rua);
-		bean.setBairro(bairro);
-		bean.setCidade(cidade);
-		bean.setUf(uf);
-		bean.setIbge(ibge);
-		bean.setSenha(senha);
+		UsuarioBean user = new UsuarioBean();
+		user.setUser(login);
+		user.setNome(nome);
+		user.setTelefone(telefone);
+		user.setCep(cep);
+		user.setRua(rua);
+		user.setBairro(bairro);
+		user.setCidade(cidade);
+		user.setUf(uf);
+		user.setIbge(ibge);
+		user.setSenha(senha);
+		user.setTipoAcesso(tipoUtilizador);
 		
 		/************* Begin File Upload *******************/
 		
@@ -150,8 +156,8 @@ public class CadastroServlet extends HttpServlet {
 					  
 					  //System.out.println(fotoBase64 + "\n" + contentType);
 					  if(!contentType.equals("application/octet-stream")) {
-						  bean.setFotoBase64(fotoBase64); 
-						  bean.setContentType(contentType);
+						  user.setFotoBase64(fotoBase64); 
+						  user.setContentType(contentType);
 						  
 						  
 						  /**
@@ -176,10 +182,10 @@ public class CadastroServlet extends HttpServlet {
 						  
 						  
 						  String imagemEmMiniaturaBase64 =  "data:image/png;base64," + DatatypeConverter.printBase64Binary(arrayOutputStream.toByteArray());
-						  bean.setMiniaturaBase64(imagemEmMiniaturaBase64);
+						  user.setMiniaturaBase64(imagemEmMiniaturaBase64);
 					  } else {
-						  bean.setFotoBase64(request.getParameter("fotoHidden"));
-						  bean.setContentType(request.getParameter("contentTypeHidden"));
+						  user.setFotoBase64(request.getParameter("fotoHidden"));
+						  user.setContentType(request.getParameter("contentTypeHidden"));
 					  }
 					  
 				}
@@ -193,11 +199,11 @@ public class CadastroServlet extends HttpServlet {
 					  
 					  //System.out.println(curriculo + "\n" + contentTypecurriculo);
 					if(!contentTypecurriculo.equals("application/octet-stream")) {
-					  bean.setCurriculo(curriculo);
-					  bean.setContentTypeCurriculo(contentTypecurriculo);
+					  user.setCurriculo(curriculo);
+					  user.setContentTypeCurriculo(contentTypecurriculo);
 					} else {
-						bean.setCurriculo(request.getParameter("curriculoHidden"));	
-						bean.setContentTypeCurriculo(request.getParameter("contentTypeCurriculoHidden"));
+						user.setCurriculo(request.getParameter("curriculoHidden"));	
+						user.setContentTypeCurriculo(request.getParameter("contentTypeCurriculoHidden"));
 					}
 				}
 				  
@@ -216,21 +222,22 @@ public class CadastroServlet extends HttpServlet {
 			/**
 			 * Caso o usuario não existir avançar com o registo
 			 */
-			if(!userDao.userExiste(bean.getUser())) {
-				userDao.salvar(bean);
+			if(!userDao.userExiste(user.getUser())) {
+				userDao.salvar(user);
 				userExiste = 1;
 			} else {
-				request.setAttribute("user", bean);
+				request.setAttribute("user", user);
 				userExiste = 2;
 			}
 		} else {
-			bean.setId(Long.valueOf(id));
-			userDao.actualizar(bean);
+			user.setId(Long.valueOf(id));
+			userDao.actualizar(user);
 		}
 		
 		RequestDispatcher view = request.getRequestDispatcher("/cadastroUsuario.jsp");
-		request.setAttribute("usuarios", userDao.getUsers());
+		request.setAttribute("usuarios", userDao.getUsers(tipoAcesso));
 		request.setAttribute("userExiste", userExiste);
+		request.setAttribute("tipoAcesso", tipoAcesso);
 		view.forward(request, response);
 	}
 	

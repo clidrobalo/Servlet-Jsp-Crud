@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import beans.beanCursoJsp;
+import beans.UsuarioBean;
 import connection.SingleConnection;
 
 
@@ -19,8 +19,8 @@ private Connection connection;
 		connection = SingleConnection.getConnection();
 	}
 	
-	public void salvar(beanCursoJsp user)  {
-		String query = "INSERT INTO usuario(login, nome, telefone, cep, rua, bairro, cidade, uf, ibge, senha, fotobase64, contenttype, curriculo, contenttypecurriculo, miniaturabase64) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	public void salvar(UsuarioBean user)  {
+		String query = "INSERT INTO usuario(login, nome, telefone, cep, rua, bairro, cidade, uf, ibge, senha, fotobase64, contenttype, curriculo, contenttypecurriculo, miniaturabase64, tipoacesso) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		
 		try {
@@ -40,6 +40,7 @@ private Connection connection;
 			statement.setString(13, user.getCurriculo());
 			statement.setString(14, user.getContentTypeCurriculo());
 			statement.setString(15, user.getMiniaturaBase64());
+			statement.setString(16, user.getTipoAcesso());
 			statement.execute();
 			// Salvar no banco de dados
 			connection.commit();
@@ -58,35 +59,46 @@ private Connection connection;
 		
 	}
 	
-	public List<beanCursoJsp> getUsers() {
-		List<beanCursoJsp> lista = new ArrayList<beanCursoJsp>();
+	public List<UsuarioBean> getUsers(String tipoAcesso) {
+		List<UsuarioBean> lista = new ArrayList<UsuarioBean>();
 
-		String query = "SELECT * FROM usuario";
+		String query;
+		
+		if(tipoAcesso.equals("Admin")) {
+			query = "SELECT * FROM usuario";
+		} else {
+			query = "SELECT * FROM usuario where tipoacesso <> ?";
+		}
 
 		try {
 			PreparedStatement select = connection.prepareStatement(query);
+			if(!tipoAcesso.equals("Admin")) {
+				select.setString(1, "Admin");
+			}
+			
 			ResultSet resultado = select.executeQuery();
 
 			while (resultado.next()) {
-				beanCursoJsp bean = new beanCursoJsp();
-				bean.setId(Long.parseLong(resultado.getString("id")));
-				bean.setUser(resultado.getString("login"));
-				bean.setNome(resultado.getString("nome"));
-				bean.setTelefone(resultado.getString("telefone"));
-				bean.setCep(resultado.getString("cep"));
-				bean.setRua(resultado.getString("rua"));
-				bean.setBairro(resultado.getString("bairro"));
-				bean.setCidade(resultado.getString("cidade"));
-				bean.setUf(resultado.getString("uf"));
-				bean.setIbge(resultado.getString("ibge"));
-				bean.setSenha(resultado.getString("senha"));
+				UsuarioBean user = new UsuarioBean();
+				user.setId(Long.parseLong(resultado.getString("id")));
+				user.setUser(resultado.getString("login"));
+				user.setNome(resultado.getString("nome"));
+				user.setTelefone(resultado.getString("telefone"));
+				user.setCep(resultado.getString("cep"));
+				user.setRua(resultado.getString("rua"));
+				user.setBairro(resultado.getString("bairro"));
+				user.setCidade(resultado.getString("cidade"));
+				user.setUf(resultado.getString("uf"));
+				user.setIbge(resultado.getString("ibge"));
+				user.setSenha(resultado.getString("senha"));
 				//bean.setFotoBase64(resultado.getString("fotobase64"));
-				bean.setContentType(resultado.getString("contenttype"));
-				bean.setCurriculo(resultado.getString("curriculo"));
-				bean.setContentTypeCurriculo("contenttypecurriculo");
-				bean.setMiniaturaBase64("miniaturabase64");
+				user.setContentType(resultado.getString("contenttype"));
+				user.setCurriculo(resultado.getString("curriculo"));
+				user.setContentTypeCurriculo("contenttypecurriculo");
+				user.setMiniaturaBase64("miniaturabase64");
+				user.setTipoAcesso("tipoacesso");
 				
-				lista.add(bean);
+				lista.add(user);
 			}
 
 			return lista;
@@ -119,10 +131,10 @@ private Connection connection;
 		
 	}
 	
-	public beanCursoJsp consultar(Long id) {
+	public UsuarioBean consultar(Long id) {
 		String query = "SELECT * FROM usuario WHERE id = ?";
 		
-		beanCursoJsp bean = new beanCursoJsp();
+		UsuarioBean bean = new UsuarioBean();
 		try {
 			PreparedStatement statement = connection.prepareStatement(query);
 			statement.setLong(1, id);
@@ -144,6 +156,7 @@ private Connection connection;
 				bean.setCurriculo(result.getString("curriculo"));
 				bean.setContentTypeCurriculo(result.getString("contenttypecurriculo"));
 				bean.setMiniaturaBase64(result.getString("miniaturabase64"));
+				bean.setTipoAcesso(result.getString("tipoacesso"));
 				return bean;
 			}
 		} catch (SQLException e) {
@@ -170,28 +183,29 @@ private Connection connection;
 		return false;
 	}
 	
-	public void actualizar(beanCursoJsp bean) {
+	public void actualizar(UsuarioBean user) {
 		System.out.println("Atualizar");
-		String query = "UPDATE usuario SET login = ?, nome = ?, telefone = ?, cep = ?, rua = ?, bairro = ?, cidade = ?, uf = ?, ibge = ?, senha = ?, fotobase64 = ?, contenttype = ?, curriculo = ?, contenttypecurriculo = ?, miniaturabase64 = ? WHERE id = ?";
+		String query = "UPDATE usuario SET login = ?, nome = ?, telefone = ?, cep = ?, rua = ?, bairro = ?, cidade = ?, uf = ?, ibge = ?, senha = ?, fotobase64 = ?, contenttype = ?, curriculo = ?, contenttypecurriculo = ?, miniaturabase64 = ?, tipoacesso = ? WHERE id = ?";
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = connection.prepareStatement(query);
-			preparedStatement.setString(1, bean.getUser());
-			preparedStatement.setString(2, bean.getNome());
-			preparedStatement.setString(3, bean.getTelefone());
-			preparedStatement.setString(4, bean.getCep());
-			preparedStatement.setString(5, bean.getRua());
-			preparedStatement.setString(6, bean.getBairro());
-			preparedStatement.setString(7, bean.getCidade());
-			preparedStatement.setString(8, bean.getUf());
-			preparedStatement.setString(9, bean.getIbge());
-			preparedStatement.setString(10, bean.getSenha());
-			preparedStatement.setString(11, bean.getFotoBase64());
-			preparedStatement.setString(12, bean.getContentType());
-			preparedStatement.setString(13, bean.getCurriculo());
-			preparedStatement.setString(14, bean.getContentTypeCurriculo());
-			preparedStatement.setString(15, bean.getMiniaturaBase64());
-			preparedStatement.setLong(16, bean.getId());
+			preparedStatement.setString(1, user.getUser());
+			preparedStatement.setString(2, user.getNome());
+			preparedStatement.setString(3, user.getTelefone());
+			preparedStatement.setString(4, user.getCep());
+			preparedStatement.setString(5, user.getRua());
+			preparedStatement.setString(6, user.getBairro());
+			preparedStatement.setString(7, user.getCidade());
+			preparedStatement.setString(8, user.getUf());
+			preparedStatement.setString(9, user.getIbge());
+			preparedStatement.setString(10, user.getSenha());
+			preparedStatement.setString(11, user.getFotoBase64());
+			preparedStatement.setString(12, user.getContentType());
+			preparedStatement.setString(13, user.getCurriculo());
+			preparedStatement.setString(14, user.getContentTypeCurriculo());
+			preparedStatement.setString(15, user.getMiniaturaBase64());
+			preparedStatement.setString(16, user.getTipoAcesso());
+			preparedStatement.setLong(17, user.getId());
 			
 			preparedStatement.executeUpdate();
 			connection.commit();

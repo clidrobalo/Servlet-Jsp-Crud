@@ -1,6 +1,6 @@
 
-<jsp:useBean id="calcula" class="beans.beanCursoJsp"
-	type="beans.beanCursoJsp" scope="page"></jsp:useBean>
+<jsp:useBean id="calcula" class="beans.UsuarioBean"
+	type="beans.UsuarioBean" scope="page"></jsp:useBean>
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>

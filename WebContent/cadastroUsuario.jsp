@@ -47,7 +47,19 @@
 			
 			<form class="login-form" action="salvarUsuario" method="post" enctype="multipart/form-data">
 				<table>
-					<td><input type="hidden" name="id" value="${user.id }" required></td>
+					<input type="hidden" name="id" value="${user.id }">
+					<input type="hidden" name="tipoAcesso" value="${tipoAcesso }">
+					<c:if test="${tipoAcesso == 'Admin'}">
+						<tr>
+						<td colspan="2" style="background-color: gray; padding: 8px; color: #FFF; font-weight: bold;">
+							Utilizador
+							<select name="tipoUtilizador">
+							  <option value="admin">Admin</option>	
+							  <option value="convidado">Convidado</option>
+							</select>
+  						</td>
+					</c:if>
+					</tr>
 					<tr> 
 						<td><input type="text" id="login" name="login" value="${user.user }" placeholder="username" required /></td>
 						<td><input type="number" id="cep" name="cep" value="${user.cep }" placeholder="Cep" onblur="consultaCep()" /></td>
@@ -133,9 +145,9 @@
 						</c:if>
 					</td>
 					<td><c:out value="${user.telefone}"></c:out></td>
-					<td><a href="salvarUsuario?acao=delete&id=${user.id}"><img
+					<td><a href="salvarUsuario?acao=delete&id=${user.id}&tipoAcesso=${tipoAcesso}"><img
 							alt="Excluir" src="resources/img/delete-icon.png" width="30px"></a>
-					<td><a href="salvarUsuario?acao=editar&id=${user.id}"><img
+					<td><a href="salvarUsuario?acao=editar&id=${user.id}&tipoAcesso=${tipoAcesso}"><img
 							alt="Editar" src="resources/img/edit-icon.png" width="30px"></a>
 					<td><a href="TelefoneServlet?acao=verTelefones&idUsuario=${user.id}&user=${user.user}"><img
 							alt="Telefones" src="resources/img/tel-icon.png" width="30px"></a>

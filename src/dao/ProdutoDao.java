@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import beans.ProdutoBean;
-import beans.beanCursoJsp;
+import beans.UsuarioBean;
 import connection.SingleConnection;
 
 public class ProdutoDao {

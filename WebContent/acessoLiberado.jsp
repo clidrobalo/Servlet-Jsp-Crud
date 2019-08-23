@@ -1,4 +1,4 @@
-<jsp:useBean id="calcula" class="beans.beanCursoJsp" type="beans.beanCursoJsp" scope="page"></jsp:useBean>
+<jsp:useBean id="calcula" class="beans.UsuarioBean" type="beans.UsuarioBean" scope="page"></jsp:useBean>
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -14,7 +14,7 @@
 		<h1>Bem vindo ao sistema em jsp</h1>
 	</div>
 	
-	<a href="salvarUsuario?acao=listarTodos">
+	<a href="salvarUsuario?acao=listarTodos&tipoAcesso=${tipoAcesso}">
 		<img alt="Novo registo" src="resources/img/add-user.jpg" width="10%";>
 	</a>
 	

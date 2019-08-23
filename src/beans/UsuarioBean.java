@@ -1,7 +1,7 @@
 package beans;
 
 
-public class beanCursoJsp {
+public class UsuarioBean {
 	private Long id;
 	private String user;
 	private String nome;
@@ -17,9 +17,10 @@ public class beanCursoJsp {
 	private String  contentType; 
 	private String tempFotoUser;
 	private String curriculo;
-	private String  contentTypeCurriculo; 
+	private String contentTypeCurriculo; 
 	private String tempCurriculo;
 	private String miniaturaBase64;
+	private String tipoAcesso;
 	
 	/*
 	 * Metodo que reconstroi a imagem para ser apresentada na UI
@@ -28,8 +29,6 @@ public class beanCursoJsp {
 		this.tempFotoUser = "data:" + this.contentType + ";base64," + fotoBase64;
 		return this.tempFotoUser;
 	}
-	
-
 	
 	public String getUser() {
 		return user;
@@ -138,6 +137,21 @@ public class beanCursoJsp {
 		this.miniaturaBase64 = miniaturaBase64;
 	}
 
+
+
+	public String getTipoAcesso() {
+		return tipoAcesso;
+	}
+
+
+
+	public void setTipoAcesso(String acessoPermitido) {
+		this.tipoAcesso = acessoPermitido;
+	}
+
+	public boolean isAdmin() {
+		return this.tipoAcesso.equals("Admin");
+	}
 	
 	
 }
