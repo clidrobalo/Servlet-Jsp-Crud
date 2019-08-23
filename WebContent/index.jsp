@@ -16,8 +16,11 @@
 	<title>Login</title>
 </head>
 <body>
-
+	
 	<div class="login-page">
+		<center><h3>Projeto didatico</h3></center>
+		<center><h1>JSP + Servlet + JDBC</h1></center>
+		<center>User: Teste | Senha: Teste</center>
 		<div class="form">
 			<c:if test="${!existeCridencias}">
 				<h4 style="color: tomato; text-align: center;">User e Senha vazio!</h4>

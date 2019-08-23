@@ -153,5 +153,8 @@ public class UsuarioBean {
 		return this.tipoAcesso.equals("Admin");
 	}
 	
+	public boolean hasFoto() {
+		return  this.contentType.contains("image");
+	}
 	
 }

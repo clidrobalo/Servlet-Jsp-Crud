@@ -20,12 +20,12 @@
 
 	<a href="acessoLiberado.jsp">
 		<div class="back-link" style="padding: 20px; background-color: #FFF; display: inline;">
-			Inicio
+			<img src="resources/img/home.png" alt="Home">
 		</div>
 	</a>
 	<a href="index.jsp">
 		<div class="back-link" style="padding: 20px; background-color: #FFF; display: inline; margin-left: 1px;">
-			Sair
+			<img src="resources/img/exit.png" alt="Exit">
 		</div>
 	</a>
 	<div class="login-page">
@@ -64,6 +64,7 @@
 		</div>
 	</div>
 
+	<center><h3><strong>Lista de Produtos</strong></h3></center>
 	<hr>
 
 	<table class="table" style="width: 60%; margin: auto;">

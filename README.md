@@ -2,7 +2,7 @@
 
 Sistema implementado apartir do Curso Servlet-Jsp Basico.
 
-Tecnologias usadas:
+Tecnologias utilizadas:
  - Java EE
  - Servlet
  - Jsp

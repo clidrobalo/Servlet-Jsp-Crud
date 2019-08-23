@@ -98,6 +98,7 @@ private Connection connection;
 				user.setMiniaturaBase64("miniaturabase64");
 				user.setTipoAcesso("tipoacesso");
 				
+				System.out.println(user.getNome() + " - " + user.hasFoto());
 				lista.add(user);
 			}
 

@@ -88,7 +88,11 @@ public class UsuarioServlet extends HttpServlet {
 					fileBytes = new Base64().decodeBase64(user.getCurriculo());
 				}
 				
-				response.setHeader("Content-Disposition", "attachament;filename=arquivo." + contentType.split("\\/")[1]);
+				if(!contentType.isEmpty()) {
+					response.setHeader("Content-Disposition", "attachament;filename=arquivo." + contentType.split("\\/")[1]);
+				} else {
+					
+				}
 				
 				
 				//Colocar os bytes em um objeto de entrada para processar
