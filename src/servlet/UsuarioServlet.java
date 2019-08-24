@@ -130,6 +130,9 @@ public class UsuarioServlet extends HttpServlet {
 		String tipoUtilizador = request.getParameter("tipoUtilizador");
 		String tipoAcesso = request.getParameter("tipoAcesso");
 		
+		//Ativo: on, inativo: null
+		String checkBoxAtivo = request.getParameter("ativo");
+		
 		int userExiste = 0;
 		
 		UsuarioBean user = new UsuarioBean();
@@ -144,6 +147,10 @@ public class UsuarioServlet extends HttpServlet {
 		user.setIbge(ibge);
 		user.setSenha(senha);
 		user.setTipoAcesso(tipoUtilizador);
+		
+		if(checkBoxAtivo != null) {
+			user.setAtivo(true);
+		}
 		
 		/************* Begin File Upload *******************/
 		

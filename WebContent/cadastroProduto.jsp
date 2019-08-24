@@ -87,7 +87,7 @@
 					<td>
 						<fmt:formatNumber value = "${produto.valor}" type = "number" pattern="###.### $"/>
 					</td>
-					<td><a href="ProdutoServlet?acao=delete&id=${produto.id}"><img
+					<td><a href="ProdutoServlet?acao=delete&id=${produto.id}" onclick="return confirm('Excluir registo?');"><img
 							alt="Excluir" src="resources/img/delete-icon.png" width="30px"></a>
 					<td><a href="ProdutoServlet?acao=editar&id=${produto.id}"><img
 							alt="Editar" src="resources/img/edit-icon.png" width="30px"></a>

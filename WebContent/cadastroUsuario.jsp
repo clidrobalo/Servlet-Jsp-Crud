@@ -1,3 +1,4 @@
+<%@page import="beans.UsuarioBean"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 
@@ -96,12 +97,31 @@
 						<input type="hidden" name="curriculoHidden" value="${user.curriculo }"/></td>
 						<input type="hidden" name="contentTypeCurriculoHidden" value="${user.contentTypeCurriculo }"/></td>
 					</tr>
+					<tr  style="background-color: gray; color: #FFF;">
+						<td>Ativo: </td>
+						<td><input type="checkbox" id="ativo" name="ativo"
+								
+								<%
+									if(request.getAttribute("user") != null) {
+										UsuarioBean user = (UsuarioBean) request.getAttribute("user");
+										if(user.isAtivo()) {
+											out.print(" ");
+											out.print("checked=\"checked\"");
+											out.print(" ");
+										}
+									}
+								
+								%>					
+							>
+						</td>
+					</tr>
 				</table>
-				<button type="submit">Salvar</button>
+				<button type="submit" style="margin-top: 2px;">Salvar</button>
 			</form>
 			<c:if test="${user != null }">
 				<a href="salvarUsuario?acao=listarTodos&id=${user.id}">
 					<button style="background-color: tomato;">Cancelar</button>
+				</a>
 			</c:if>
 		</div>
 	</div>
@@ -147,7 +167,7 @@
 					</td>
 					<td><c:out value="${user.telefone}"></c:out></td>
 					<td><a href="salvarUsuario?acao=delete&id=${user.id}&tipoAcesso=${tipoAcesso}"><img
-							alt="Excluir" src="resources/img/delete-icon.png" width="30px"></a>
+							alt="Excluir" src="resources/img/delete-icon.png" width="30px" onclick="return confirm('Excluir registo?');"></a>
 					<td><a href="salvarUsuario?acao=editar&id=${user.id}&tipoAcesso=${tipoAcesso}"><img
 							alt="Editar" src="resources/img/edit-icon.png" width="30px"></a>
 					<td><a href="TelefoneServlet?acao=verTelefones&idUsuario=${user.id}&user=${user.user}"><img

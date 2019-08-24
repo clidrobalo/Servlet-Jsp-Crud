@@ -20,7 +20,7 @@ private Connection connection;
 	}
 	
 	public void salvar(UsuarioBean user)  {
-		String query = "INSERT INTO usuario(login, nome, telefone, cep, rua, bairro, cidade, uf, ibge, senha, fotobase64, contenttype, curriculo, contenttypecurriculo, miniaturabase64, tipoacesso) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String query = "INSERT INTO usuario(login, nome, telefone, cep, rua, bairro, cidade, uf, ibge, senha, fotobase64, contenttype, curriculo, contenttypecurriculo, miniaturabase64, tipoacesso, ativo) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		
 		try {
@@ -41,6 +41,7 @@ private Connection connection;
 			statement.setString(14, user.getContentTypeCurriculo());
 			statement.setString(15, user.getMiniaturaBase64());
 			statement.setString(16, user.getTipoAcesso());
+			statement.setBoolean(17, user.isAtivo());
 			statement.execute();
 			// Salvar no banco de dados
 			connection.commit();
@@ -94,11 +95,11 @@ private Connection connection;
 				//bean.setFotoBase64(resultado.getString("fotobase64"));
 				user.setContentType(resultado.getString("contenttype"));
 				user.setCurriculo(resultado.getString("curriculo"));
-				user.setContentTypeCurriculo("contenttypecurriculo");
-				user.setMiniaturaBase64("miniaturabase64");
-				user.setTipoAcesso("tipoacesso");
+				user.setContentTypeCurriculo(resultado.getString("contenttypecurriculo"));
+				user.setMiniaturaBase64(resultado.getString("miniaturabase64"));
+				user.setTipoAcesso(resultado.getString("tipoacesso"));
+				user.setAtivo(resultado.getBoolean("ativo"));
 				
-				System.out.println(user.getNome() + " - " + user.hasFoto());
 				lista.add(user);
 			}
 
@@ -158,6 +159,7 @@ private Connection connection;
 				bean.setContentTypeCurriculo(result.getString("contenttypecurriculo"));
 				bean.setMiniaturaBase64(result.getString("miniaturabase64"));
 				bean.setTipoAcesso(result.getString("tipoacesso"));
+				bean.setAtivo(result.getBoolean("ativo"));
 				return bean;
 			}
 		} catch (SQLException e) {
@@ -186,7 +188,7 @@ private Connection connection;
 	
 	public void actualizar(UsuarioBean user) {
 		System.out.println("Atualizar");
-		String query = "UPDATE usuario SET login = ?, nome = ?, telefone = ?, cep = ?, rua = ?, bairro = ?, cidade = ?, uf = ?, ibge = ?, senha = ?, fotobase64 = ?, contenttype = ?, curriculo = ?, contenttypecurriculo = ?, miniaturabase64 = ?, tipoacesso = ? WHERE id = ?";
+		String query = "UPDATE usuario SET login = ?, nome = ?, telefone = ?, cep = ?, rua = ?, bairro = ?, cidade = ?, uf = ?, ibge = ?, senha = ?, fotobase64 = ?, contenttype = ?, curriculo = ?, contenttypecurriculo = ?, miniaturabase64 = ?, tipoacesso = ?, ativo = ? WHERE id = ?";
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = connection.prepareStatement(query);
@@ -206,7 +208,8 @@ private Connection connection;
 			preparedStatement.setString(14, user.getContentTypeCurriculo());
 			preparedStatement.setString(15, user.getMiniaturaBase64());
 			preparedStatement.setString(16, user.getTipoAcesso());
-			preparedStatement.setLong(17, user.getId());
+			preparedStatement.setBoolean(17, user.isAtivo());
+			preparedStatement.setLong(18, user.getId());
 			
 			preparedStatement.executeUpdate();
 			connection.commit();

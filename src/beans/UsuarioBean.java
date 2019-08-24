@@ -18,10 +18,9 @@ public class UsuarioBean {
 	private String tempFotoUser;
 	private String curriculo;
 	private String contentTypeCurriculo; 
-	private String tempCurriculo;
 	private String miniaturaBase64;
 	private String tipoAcesso;
-	
+	private boolean ativo;
 	/*
 	 * Metodo que reconstroi a imagem para ser apresentada na UI
 	 */
@@ -156,5 +155,14 @@ public class UsuarioBean {
 	public boolean hasFoto() {
 		return  this.contentType.contains("image");
 	}
+
+	public boolean isAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(boolean ativo) {
+		this.ativo = ativo;
+	}
+
 	
 }
