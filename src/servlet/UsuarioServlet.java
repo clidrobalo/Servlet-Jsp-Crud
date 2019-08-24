@@ -51,26 +51,24 @@ public class UsuarioServlet extends HttpServlet {
 		
 		String acao = request.getParameter("acao");
 		String  idUser = request.getParameter("id");
-		String tipoAcesso = request.getParameter("tipoAcesso");
 		
 		System.out.println(acao);
 		
-		request.setAttribute("tipoAcesso", tipoAcesso);
 		
 		if(acao.equals("delete")) {
 			userDao.delete(Long.parseLong(idUser));
 			RequestDispatcher view = request.getRequestDispatcher("cadastroUsuario.jsp");
-			request.setAttribute("usuarios", userDao.getUsers(tipoAcesso));
+			request.setAttribute("usuarios", userDao.getUsers());
 			view.forward(request, response);
 		} else if(acao.equals("editar")) {
 			UsuarioBean bean = userDao.consultar(Long.parseLong(idUser));
 			RequestDispatcher view = request.getRequestDispatcher("cadastroUsuario.jsp");
-			request.setAttribute("usuarios", userDao.getUsers(tipoAcesso));
+			request.setAttribute("usuarios", userDao.getUsers());
 			request.setAttribute("user", bean);
 			view.forward(request, response);
 		} else if(acao.equals("listarTodos")) {
 			RequestDispatcher view = request.getRequestDispatcher("/cadastroUsuario.jsp");
-			request.setAttribute("usuarios", userDao.getUsers(tipoAcesso));
+			request.setAttribute("usuarios", userDao.getUsers());
 			view.forward(request, response);
 		} else if(acao.equals("download")) {
 			UsuarioBean user = userDao.consultar(Long.parseLong(idUser));
@@ -128,11 +126,11 @@ public class UsuarioServlet extends HttpServlet {
 		String ibge = request.getParameter("ibge");
 		String senha = request.getParameter("senha");
 		String tipoUtilizador = request.getParameter("tipoUtilizador");
-		String tipoAcesso = request.getParameter("tipoAcesso");
-		
+
 		//Ativo: on, inativo: null
 		String checkBoxAtivo = request.getParameter("ativo");
-		
+		String sexo = request.getParameter("sexo");
+				
 		int userExiste = 0;
 		
 		UsuarioBean user = new UsuarioBean();
@@ -147,6 +145,7 @@ public class UsuarioServlet extends HttpServlet {
 		user.setIbge(ibge);
 		user.setSenha(senha);
 		user.setTipoAcesso(tipoUtilizador);
+		user.setSexo(sexo);
 		
 		if(checkBoxAtivo != null) {
 			user.setAtivo(true);
@@ -246,9 +245,8 @@ public class UsuarioServlet extends HttpServlet {
 		}
 		
 		RequestDispatcher view = request.getRequestDispatcher("/cadastroUsuario.jsp");
-		request.setAttribute("usuarios", userDao.getUsers(tipoAcesso));
+		request.setAttribute("usuarios", userDao.getUsers());
 		request.setAttribute("userExiste", userExiste);
-		request.setAttribute("tipoAcesso", tipoAcesso);
 		view.forward(request, response);
 	}
 	

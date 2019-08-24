@@ -28,7 +28,7 @@
 	<center style="padding: 100px;">
 		<table>
 			<tr>
-				<td><a href="salvarUsuario?acao=listarTodos&tipoAcesso=${tipoAcesso}"><img alt="Novo registo" src="resources/img/add-user.jpg" width="150px";></a></td>
+				<td><a href="salvarUsuario?acao=listarTodos"><img alt="Novo registo" src="resources/img/add-user.jpg" width="150px";></a></td>
 				<td><a href="ProdutoServlet?acao=listarTodos"><img alt="Novo produto" src="resources/img/add-button.png" width="150px";></a></td>
 			</tr>
 			<tr style="text-align: center;">

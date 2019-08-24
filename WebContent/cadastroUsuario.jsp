@@ -49,17 +49,15 @@
 			<form class="login-form" action="salvarUsuario" method="post" enctype="multipart/form-data">
 				<table>
 					<input type="hidden" name="id" value="${user.id }">
-					<input type="hidden" name="tipoAcesso" value="${tipoAcesso }">
-					<c:if test="${tipoAcesso == 'Admin'}">
-						<tr>
+					<tr>
 						<td colspan="2" style="background-color: gray; padding: 8px; color: #FFF; font-weight: bold;">
 							Utilizador
 							<select name="tipoUtilizador">
-							  <option value="admin">Admin</option>	
-							  <option value="convidado">Convidado</option>
+							 <option value="">Selecione um perfil</option>	
+							  <option value="admin" ${user.tipoAcesso eq 'Admin' ? 'selected=\"selected\"' : ''}>Admin</option>	
+							  <option value="convidado" ${user.tipoAcesso eq 'Convidado' ? 'selected=\"selected\"' : ''}>Convidado</option>
 							</select>
-  						</td>
-					</c:if>
+	 					</td>
 					</tr>
 					<tr> 
 						<td><input type="text" id="login" name="login" value="${user.user }" placeholder="username" required /></td>
@@ -115,11 +113,26 @@
 							>
 						</td>
 					</tr>
+					<tr>
+						<td>Sexo: </td>
+						<td>
+							<table>
+								<tr>
+									<td><input type="radio" name="sexo" value="masculino" ${user.sexo eq 'masculino' ? 'checked' : ''}>------</td>
+									<td>Masculino</td>
+								</tr>
+								<tr>
+									<td><input type="radio" name="sexo" value="feminino" ${user.sexo eq 'feminino' ? 'checked' : ''}></td>
+									<td>Feminino</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
 				</table>
 				<button type="submit" style="margin-top: 2px;">Salvar</button>
 			</form>
 			<c:if test="${user != null }">
-				<a href="salvarUsuario?acao=listarTodos&id=${user.id}">
+				<a href="salvarUsuario?acao=listarTodos&id=${user.id}&tipoAcesso=${tipoAcesso}">
 					<button style="background-color: tomato;">Cancelar</button>
 				</a>
 			</c:if>

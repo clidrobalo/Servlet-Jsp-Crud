@@ -20,7 +20,7 @@ private Connection connection;
 	}
 	
 	public void salvar(UsuarioBean user)  {
-		String query = "INSERT INTO usuario(login, nome, telefone, cep, rua, bairro, cidade, uf, ibge, senha, fotobase64, contenttype, curriculo, contenttypecurriculo, miniaturabase64, tipoacesso, ativo) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String query = "INSERT INTO usuario(login, nome, telefone, cep, rua, bairro, cidade, uf, ibge, senha, fotobase64, contenttype, curriculo, contenttypecurriculo, miniaturabase64, tipoacesso, ativo, sexo) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		
 		try {
@@ -42,6 +42,7 @@ private Connection connection;
 			statement.setString(15, user.getMiniaturaBase64());
 			statement.setString(16, user.getTipoAcesso());
 			statement.setBoolean(17, user.isAtivo());
+			statement.setString(18, user.getSexo());
 			statement.execute();
 			// Salvar no banco de dados
 			connection.commit();
@@ -60,22 +61,14 @@ private Connection connection;
 		
 	}
 	
-	public List<UsuarioBean> getUsers(String tipoAcesso) {
+	public List<UsuarioBean> getUsers() {
 		List<UsuarioBean> lista = new ArrayList<UsuarioBean>();
 
-		String query;
-		
-		if(tipoAcesso.equals("Admin")) {
-			query = "SELECT * FROM usuario";
-		} else {
-			query = "SELECT * FROM usuario where tipoacesso <> ?";
-		}
+		String query = "SELECT * FROM usuario where login <> ?";
 
 		try {
 			PreparedStatement select = connection.prepareStatement(query);
-			if(!tipoAcesso.equals("Admin")) {
-				select.setString(1, "Admin");
-			}
+			select.setString(1, "Clid");
 			
 			ResultSet resultado = select.executeQuery();
 
@@ -99,6 +92,7 @@ private Connection connection;
 				user.setMiniaturaBase64(resultado.getString("miniaturabase64"));
 				user.setTipoAcesso(resultado.getString("tipoacesso"));
 				user.setAtivo(resultado.getBoolean("ativo"));
+				user.setSexo(resultado.getString("sexo"));
 				
 				lista.add(user);
 			}
@@ -160,6 +154,8 @@ private Connection connection;
 				bean.setMiniaturaBase64(result.getString("miniaturabase64"));
 				bean.setTipoAcesso(result.getString("tipoacesso"));
 				bean.setAtivo(result.getBoolean("ativo"));
+				bean.setSexo(result.getString("sexo"));
+				
 				return bean;
 			}
 		} catch (SQLException e) {
@@ -188,7 +184,7 @@ private Connection connection;
 	
 	public void actualizar(UsuarioBean user) {
 		System.out.println("Atualizar");
-		String query = "UPDATE usuario SET login = ?, nome = ?, telefone = ?, cep = ?, rua = ?, bairro = ?, cidade = ?, uf = ?, ibge = ?, senha = ?, fotobase64 = ?, contenttype = ?, curriculo = ?, contenttypecurriculo = ?, miniaturabase64 = ?, tipoacesso = ?, ativo = ? WHERE id = ?";
+		String query = "UPDATE usuario SET login = ?, nome = ?, telefone = ?, cep = ?, rua = ?, bairro = ?, cidade = ?, uf = ?, ibge = ?, senha = ?, fotobase64 = ?, contenttype = ?, curriculo = ?, contenttypecurriculo = ?, miniaturabase64 = ?, tipoacesso = ?, ativo = ?, sexo = ? WHERE id = ?";
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = connection.prepareStatement(query);
@@ -209,7 +205,8 @@ private Connection connection;
 			preparedStatement.setString(15, user.getMiniaturaBase64());
 			preparedStatement.setString(16, user.getTipoAcesso());
 			preparedStatement.setBoolean(17, user.isAtivo());
-			preparedStatement.setLong(18, user.getId());
+			preparedStatement.setString(18, user.getSexo());
+			preparedStatement.setLong(19, user.getId());
 			
 			preparedStatement.executeUpdate();
 			connection.commit();

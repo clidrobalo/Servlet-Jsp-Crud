@@ -21,6 +21,7 @@ public class UsuarioBean {
 	private String miniaturaBase64;
 	private String tipoAcesso;
 	private boolean ativo;
+	private String sexo;
 	/*
 	 * Metodo que reconstroi a imagem para ser apresentada na UI
 	 */
@@ -162,6 +163,14 @@ public class UsuarioBean {
 
 	public void setAtivo(boolean ativo) {
 		this.ativo = ativo;
+	}
+
+	public String getSexo() {
+		return sexo;
+	}
+
+	public void setSexo(String sexo) {
+		this.sexo = sexo;
 	}
 
 	

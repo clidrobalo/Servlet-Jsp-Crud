@@ -48,11 +48,6 @@ public class LoginServlet extends HttpServlet {
 			try {
 				if(daoLogin.validarLogin(user, senha)) {
 					UsuarioBean usuario = daoLogin.getUser(user);
-					if(usuario.getTipoAcesso().equals("Admin")) {
-						request.setAttribute("tipoAcesso", "Admin");
-					} else {
-						request.setAttribute("tipoAcesso", "Convidado");
-					}
 					RequestDispatcher dispacher = request.getRequestDispatcher("acessoLiberado.jsp");
 					dispacher.forward(request, response);
 				} else {
