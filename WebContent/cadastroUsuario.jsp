@@ -140,6 +140,10 @@
 	</div>
 
 	<center><h3><strong>Lista de Usuarios</strong></h3></center>
+	<form method="post" action="servletPesquisa" style="margin-left: 20%">
+		<input type="text" name="valorPesquisa" placeholder="Pesquisar usuario..." style="width: 50%">
+		<input type="submit" value="Pesquisar">
+	</form>
 	<hr> 
 
 	<table class="table" style="width: 60%; margin: auto;">

@@ -62,15 +62,46 @@ private Connection connection;
 	}
 	
 	public List<UsuarioBean> getUsers() {
-		List<UsuarioBean> lista = new ArrayList<UsuarioBean>();
 
 		String query = "SELECT * FROM usuario where login <> ?";
-
+		PreparedStatement select;
 		try {
-			PreparedStatement select = connection.prepareStatement(query);
+			select = connection.prepareStatement(query);
 			select.setString(1, "Clid");
 			
-			ResultSet resultado = select.executeQuery();
+			return ConsultarUsuarios(select);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public List<UsuarioBean> getUsers(String valorPesquisa) {
+		List<UsuarioBean> lista = new ArrayList<UsuarioBean>();
+
+		String query = "SELECT * FROM usuario where login <> ? and nome like '%" + valorPesquisa +"%'";
+		PreparedStatement select;
+		try {
+			select = connection.prepareStatement(query);
+			select.setString(1, "Clid");
+			
+			return ConsultarUsuarios(select);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public List<UsuarioBean> ConsultarUsuarios(PreparedStatement statement) {
+		
+		List<UsuarioBean> lista = new ArrayList<UsuarioBean>();
+		
+		try {
+
+			ResultSet resultado = statement.executeQuery();
 
 			while (resultado.next()) {
 				UsuarioBean user = new UsuarioBean();
@@ -105,6 +136,7 @@ private Connection connection;
 
 		return lista;
 	}
+
 	
 	public void delete(Long id) {
 		String query = "DELETE FROM usuario WHERE id = ?"; 
