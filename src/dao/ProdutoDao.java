@@ -20,13 +20,14 @@ public class ProdutoDao {
 	}
 	
 	public void salvar(ProdutoBean produto) {
-		String query = "INSERT INTO produto(nome, quantidade, valor) VALUES(?, ?, ?)";
+		String query = "INSERT INTO produto(nome, quantidade, valor, categoria_id) VALUES(?, ?, ?, ?)";
 		
 		try {
 			PreparedStatement statement = connection.prepareStatement(query);
 			statement.setString(1, produto.getNome());
 			statement.setInt(2, produto.getQuantidade());
 			statement.setDouble(3, produto.getValor());
+			statement.setLong(4, produto.getCategoriaId());
 			statement.execute();
 			//salvar no banco de dados
 			connection.commit();
@@ -75,7 +76,7 @@ public class ProdutoDao {
 				produto.setNome(resultado.getString("nome"));
 				produto.setQuantidade(Integer.parseInt(resultado.getString("quantidade")));
 				produto.setValor(Double.valueOf(resultado.getString("valor")));
-				
+				produto.setCategoriaId(resultado.getLong("categoria_id"));
 				lista.add(produto);
 			}
 
@@ -111,14 +112,16 @@ public class ProdutoDao {
 	
 	public void actualizar(ProdutoBean produto ) {
 		System.out.println("Atualizar");
-		String query = "UPDATE produto SET nome = ?, quantidade = ?, valor = ? WHERE id = ?";
+		String query = "UPDATE produto SET nome = ?, quantidade = ?, valor = ?, categoria_id = ? WHERE id = ?";
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setString(1, produto.getNome());
 			preparedStatement.setInt(2, produto.getQuantidade());
 			preparedStatement.setDouble(3, produto.getValor());
-			preparedStatement.setLong(4, produto.getId());
+			preparedStatement.setLong(4, produto.getCategoriaId());
+			preparedStatement.setLong(5, produto.getId());
+			
 			preparedStatement.executeUpdate();
 			connection.commit();
 		} catch (SQLException e) {
@@ -146,6 +149,7 @@ public class ProdutoDao {
 				produto.setNome(result.getString("nome"));
 				produto.setQuantidade(result.getInt("quantidade"));
 				produto.setValor(result.getDouble("valor"));
+				produto.setCategoriaId(result.getLong("categoria_id"));
 				return produto;
 			}
 		} catch (SQLException e) {

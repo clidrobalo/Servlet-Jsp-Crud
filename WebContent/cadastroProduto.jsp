@@ -38,6 +38,10 @@
 			<c:if test="${valorInvalido}">
 				<p style="color: tomato;">Valor invalido!</p>
 			</c:if>
+			
+			<c:if test="${categoriaInvalido}">
+				<p style="color: tomato;">Categoria invalido!</p>
+			</c:if>
 
 			<c:if test="${produtoRegistado}">
 				<p style="color: green;">Produto registado com sucesso!</p>
@@ -55,11 +59,22 @@
 					name="quantidade" id="quantidade" value="${produto.quantidade }"
 					placeholder="Quantidade" required />
 					<input type="number step="any" name="valor" id="valor" value="${produto.valor }" placeholder="Valor-$" required />
-				<button type="">Salvar</button>
+					<select name="categoria" style="width: 100%; height: 30px;">
+						<c:forEach var="categoria" items="${categorias }">
+							<option value="0" hidden>Escolha uma categoria</option>
+							<option value="${categoria.id }"
+								<c:if test="${categoria.id == produto.categoriaId }">
+									<c:out value="selected"/>
+								</c:if>
+							>${categoria.nome }</option>
+						</c:forEach>
+					</select>
+				<button type="" style="margin-top: 8px;">Salvar</button>
 			</form>
 			<c:if test="${produto != null }">
 				<a href="ProdutoServlet?acao=listarTodos&id=${produto.id}">
 					<button style="background-color: tomato;">Cancelar</button>
+					</a>
 			</c:if>
 		</div>
 	</div>

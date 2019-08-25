@@ -6,6 +6,8 @@ public class ProdutoBean {
 	private String nome;
 	private int quantidade;
 	private Double valor;
+	private Long categoriaId;
+	
 	public Long getId() {
 		return id;
 	}
@@ -29,5 +31,11 @@ public class ProdutoBean {
 	}
 	public void setValor(Double valor) {
 		this.valor = valor;
+	}
+	public Long getCategoriaId() {
+		return categoriaId;
+	}
+	public void setCategoriaId(Long categoriaId) {
+		this.categoriaId = categoriaId;
 	}
 }

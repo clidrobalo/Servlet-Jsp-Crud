@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import beans.ProdutoBean;
+import dao.DaoCategoria;
 import dao.ProdutoDao;
 
 /**
@@ -20,6 +21,7 @@ public class ProdutoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	ProdutoDao produtoDao = new ProdutoDao();
+	DaoCategoria daoCategoria =  new DaoCategoria();
 	
     public ProdutoServlet() {
         super();
@@ -46,6 +48,7 @@ public class ProdutoServlet extends HttpServlet {
 		}
 		
 		request.setAttribute("produtos", produtoDao.getProdutos());
+		request.setAttribute("categorias", daoCategoria.listar());
 		request.setAttribute("produtoRegistado", produtoRegistadoNaBD);
 		view.forward(request, response);
 	}
@@ -55,10 +58,14 @@ public class ProdutoServlet extends HttpServlet {
 		String id = request.getParameter("id");
 		String nome = request.getParameter("nome");
 		int quantidade  = Integer.parseInt(request.getParameter("quantidade"));
+		String strCategoriaId = request.getParameter("categoria");
+		
+		
 		boolean produtoExisteNaBD = false;
 		boolean produtoRegistadoNaBD = false;
 		boolean produtoAtualizadoNaBD = false;
 		boolean valorInvalido = false;
+		boolean categoriaInvalido = false;
 		
 		/*
 		 * A validação de não aceitar post de campos vazios fica por responsabilidade da view
@@ -67,6 +74,7 @@ public class ProdutoServlet extends HttpServlet {
 		ProdutoBean produto = new ProdutoBean();
 		produto.setNome(nome);
 		produto.setQuantidade(quantidade);
+		
 		
 		
 		/*
@@ -79,6 +87,7 @@ public class ProdutoServlet extends HttpServlet {
 			valorInvalido = true;
 			RequestDispatcher view  = request.getRequestDispatcher("/cadastroProduto.jsp");
 			request.setAttribute("produtos", produtoDao.getProdutos());
+			request.setAttribute("categorias", daoCategoria.listar());
 			request.setAttribute("produto", produto);
 			request.setAttribute("valorInvalido", valorInvalido);
 			view.forward(request, response);
@@ -86,6 +95,19 @@ public class ProdutoServlet extends HttpServlet {
 		
 		
 		produto.setValor(valor);
+		
+		//Verificar se o valor não eh default
+		if(strCategoriaId != null) {
+			produto.setCategoriaId(Long.parseLong(strCategoriaId));
+		} else {
+			categoriaInvalido = true;
+			RequestDispatcher view  = request.getRequestDispatcher("/cadastroProduto.jsp");
+			request.setAttribute("produtos", produtoDao.getProdutos());
+			request.setAttribute("categorias", daoCategoria.listar());
+			request.setAttribute("produto", produto);
+			request.setAttribute("categoriaInvalido", categoriaInvalido);
+			view.forward(request, response);
+		}
 		
 		/*
 		 * verificar se o produto ja existe, e o objetivo é editar
@@ -116,10 +138,14 @@ public class ProdutoServlet extends HttpServlet {
 		
 		RequestDispatcher view  = request.getRequestDispatcher("/cadastroProduto.jsp");
 		request.setAttribute("produtos", produtoDao.getProdutos());
+		request.setAttribute("categorias", daoCategoria.listar());
 		request.setAttribute("produtoExiste", produtoExisteNaBD);
 		request.setAttribute("produtoRegistado", produtoRegistadoNaBD);
 		request.setAttribute("produtoAtualizado", produtoAtualizadoNaBD);
 		view.forward(request, response);
 	}
 
+	public void redirect() {
+		
+	}
 }
